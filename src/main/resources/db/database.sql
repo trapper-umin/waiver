@@ -4,5 +4,7 @@ CREATE TABLE person(
   username varchar(255) NOT NULL UNIQUE CHECK ( length(username)>3 ),
   password varchar(255) NOT NULL CHECK ( length(password)>3 ),
   age int CHECK ( age>1 AND age<125),
-  role varchar(255) NOT NULL CHECK ( length(role)>3 )
+  role varchar(255) NOT NULL CHECK ( length(role)>3 ),
+  created_at timestamp NOT NULL,
+  updated_at timestamp NOT NULL
 );
