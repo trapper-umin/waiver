@@ -1,0 +1,25 @@
+
+server:
+  port: 8080
+
+# Settings of Data Base
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url:
+    username:
+    password:
+
+  # Setting of JPA (Java Persistence API)
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update
+        show_sql: true
+
+# Settings of Telegram Bot
+telegram:
+  bot:
+    token:
+    name:
