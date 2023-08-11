@@ -15,6 +15,7 @@
     <description>waiver</description>
     <properties>
         <java.version>20</java.version>
+        <telegram.version>5.7.0</telegram.version>
     </properties>
     <dependencies>
 
@@ -27,7 +28,7 @@
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
-            <version>6.7.0</version>
+            <version>${telegram.version}</version>
         </dependency>
 
         <dependency>
