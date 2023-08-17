@@ -9,20 +9,4 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1.0/people")
 public class PeopleController extends ImplPeopleController {
-
-    private final BotConfig botConfig;
-
-    public PeopleController(BotConfig botConfig) {
-        this.botConfig = botConfig;
-    }
-
-    @GetMapping
-    public String sds(){
-
-        StringBuilder message=new StringBuilder();
-
-        message.append(botConfig.getToken()).append(" ").append(botConfig.getBotUsername());
-
-        return message.toString();
-    }
 }
