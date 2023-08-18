@@ -23,3 +23,10 @@ telegram:
   bot:
     token:
     name:
+
+# SWAGGER (http://localhost:8080/swagger-ui/index.html)
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
