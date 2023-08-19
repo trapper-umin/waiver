@@ -1,5 +1,6 @@
 package dev.waiver.com.models;
 
+import dev.waiver.com.common.Role;
 import dev.waiver.com.models.common.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -34,5 +35,6 @@ public class Person extends AbstractEntity {
 
 
     @Column(name = "role")
-    private String role;
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 }
