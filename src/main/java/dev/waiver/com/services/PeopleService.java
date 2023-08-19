@@ -2,7 +2,7 @@ package dev.waiver.com.services;
 
 import dev.waiver.com.dto.responses.PersonDTOResp;
 import dev.waiver.com.services.DB.PeopleDBService;
-import dev.waiver.com.services.mapper.ConvertTo;
+import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,18 +15,18 @@ import java.util.List;
 public class PeopleService {
 
     private final PeopleDBService peopleDBService;
-    private final ConvertTo convertTo;
+    private final Mapper mapper;
 
-    public PeopleService(PeopleDBService peopleDBService, ConvertTo convertTo) {
+    public PeopleService(PeopleDBService peopleDBService, Mapper mapper) {
         this.peopleDBService = peopleDBService;
-        this.convertTo = convertTo;
+        this.mapper = mapper;
     }
 
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> get(int id){
         ResponseWithStatusAndDate<PersonDTOResp> response=new ResponseWithStatusAndDate<>(
                 HttpStatus.OK,
                 LocalDateTime.now(),
-                List.of(convertTo.personDTOResp(peopleDBService.get(id)))
+                List.of(mapper.map(peopleDBService.get(id),PersonDTOResp.class))
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
