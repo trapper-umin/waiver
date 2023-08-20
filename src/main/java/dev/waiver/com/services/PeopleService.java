@@ -9,6 +9,8 @@ import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotValidException;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
 import dev.waiver.com.util.validation.PersonUsernameUniqueValidation;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PeopleService {
@@ -25,13 +28,16 @@ public class PeopleService {
     private final PeopleDBService peopleDBService;
     private final Mapper mapper;
     private final PersonUsernameUniqueValidation personUsernameUniqueValidation;
+    private final ModelMapper modelMapper;
 
     public PeopleService(PeopleDBService peopleDBService,
                          Mapper mapper,
-                         PersonUsernameUniqueValidation personUsernameUniqueValidation) {
+                         PersonUsernameUniqueValidation personUsernameUniqueValidation,
+                         ModelMapper modelMapper) {
         this.peopleDBService = peopleDBService;
         this.mapper = mapper;
         this.personUsernameUniqueValidation = personUsernameUniqueValidation;
+        this.modelMapper = modelMapper;
     }
 
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> get(int id){
@@ -63,13 +69,7 @@ public class PeopleService {
 
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>create(PersonDTOReqst personDTOReqst, BindingResult bindingResult){
         personUsernameUniqueValidation.validate(personDTOReqst,bindingResult);
-        if(bindingResult.hasErrors()){
-            List<ValidationErrorResponse> errors=new ArrayList<>();
-            List<FieldError>fieldErrors=bindingResult.getFieldErrors();
-            for (FieldError error : fieldErrors)
-                errors.add(new ValidationErrorResponse(error.getField(),error.getDefaultMessage()));
-            throw new NotValidException(errors);
-        }
+        validation(bindingResult);
 
         peopleDBService.create(mapper.map(personDTOReqst,Person.class));
 
@@ -81,5 +81,56 @@ public class PeopleService {
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePutMethod(int id,PersonDTOReqst personDTOReqst,BindingResult bindingResult){
+        personUsernameUniqueValidation.validate(personDTOReqst,bindingResult);
+        validation(bindingResult);
+
+        peopleDBService.update(id,mapper.map(personDTOReqst,Person.class));
+
+        ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
+                HttpStatus.OK,
+                LocalDateTime.now(),
+                List.of(mapper.map(personDTOReqst,PersonDTOResp.class))
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePatchMethod(int id, Map<String,Object>updates,
+                                                                                     BindingResult bindingResult){
+        Person person=peopleDBService.get(id);
+        modelMapper.map(updates,person);
+        validationPatchMethod(person,bindingResult);
+
+        ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
+                HttpStatus.OK,
+                LocalDateTime.now(),
+                List.of(mapper.map(person,PersonDTOResp.class))
+        );
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    private void validation(BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            List<ValidationErrorResponse> errors=new ArrayList<>();
+            List<FieldError>fieldErrors=bindingResult.getFieldErrors();
+            for (FieldError error : fieldErrors)
+                errors.add(new ValidationErrorResponse(error.getField(),error.getDefaultMessage()));
+            throw new NotValidException(errors);
+        }
+    }
+
+    private void validationPatchMethod(Person person, BindingResult bindingResult){
+        if (person.getUsername() == null || person.getUsername().isEmpty()) {
+            bindingResult.rejectValue("username", "error.username", "Username is required");
+        }
+        if (person.getPassword() == null || person.getPassword().isEmpty()) {
+            bindingResult.rejectValue("password", "error.password", "Password is required");
+        }
+        validation(bindingResult);
+    }
+
+    //TODO валидация уникальности
 
 }

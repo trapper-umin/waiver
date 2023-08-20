@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 
+import java.util.Map;
+
 public class ImplPeopleController implements IPeopleController {
 
     private final PeopleService peopleService;
@@ -36,9 +38,15 @@ public class ImplPeopleController implements IPeopleController {
     }
 
     @Override
-    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> update(
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> updatePutMethod(
             int id, PersonDTOReqst personDTOReqst, BindingResult bindingResult) {
-        return null;
+        return peopleService.updatePutMethod(id,personDTOReqst,bindingResult);
+    }
+
+    @Override
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> updatePatchMethod(
+            int id, Map<String,Object> updates, BindingResult bindingResult) {
+        return peopleService.updatePatchMethod(id,updates, bindingResult);
     }
 
     @Override
