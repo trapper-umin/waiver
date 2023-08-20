@@ -1,5 +1,6 @@
 package dev.waiver.com.services;
 
+import dev.waiver.com.dto.requests.PersonDTOForPatchReqst;
 import dev.waiver.com.dto.requests.PersonDTOReqst;
 import dev.waiver.com.dto.responses.PersonDTOResp;
 import dev.waiver.com.dto.responses.errors.ValidationErrorResponse;
@@ -8,8 +9,9 @@ import dev.waiver.com.services.DB.PeopleDBService;
 import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotValidException;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
+import dev.waiver.com.util.validation.PersonAllValidation;
 import dev.waiver.com.util.validation.PersonUsernameUniqueValidation;
-import jakarta.validation.Valid;
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,24 +22,26 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PeopleService {
 
     private final PeopleDBService peopleDBService;
     private final Mapper mapper;
-    private final PersonUsernameUniqueValidation personUsernameUniqueValidation;
     private final ModelMapper modelMapper;
+    private final PersonUsernameUniqueValidation personUsernameUniqueValidation;
+    private final PersonAllValidation personAllValidation;
 
     public PeopleService(PeopleDBService peopleDBService,
                          Mapper mapper,
                          PersonUsernameUniqueValidation personUsernameUniqueValidation,
-                         ModelMapper modelMapper) {
+                         ModelMapper modelMapper,
+                         PersonAllValidation personAllValidation) {
         this.peopleDBService = peopleDBService;
         this.mapper = mapper;
         this.personUsernameUniqueValidation = personUsernameUniqueValidation;
         this.modelMapper = modelMapper;
+        this.personAllValidation = personAllValidation;
     }
 
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> get(int id){
@@ -97,11 +101,13 @@ public class PeopleService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePatchMethod(int id, Map<String,Object>updates,
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePatchMethod(int id, PersonDTOForPatchReqst personDTOForPatchReqst,
                                                                                      BindingResult bindingResult){
         Person person=peopleDBService.get(id);
-        modelMapper.map(updates,person);
-        validationPatchMethod(person,bindingResult);
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        modelMapper.map(personDTOForPatchReqst,person);
+        personAllValidation.validate(person,bindingResult);
+        validation(bindingResult);
 
         ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
                 HttpStatus.OK,
@@ -120,17 +126,5 @@ public class PeopleService {
             throw new NotValidException(errors);
         }
     }
-
-    private void validationPatchMethod(Person person, BindingResult bindingResult){
-        if (person.getUsername() == null || person.getUsername().isEmpty()) {
-            bindingResult.rejectValue("username", "error.username", "Username is required");
-        }
-        if (person.getPassword() == null || person.getPassword().isEmpty()) {
-            bindingResult.rejectValue("password", "error.password", "Password is required");
-        }
-        validation(bindingResult);
-    }
-
-    //TODO валидация уникальности
 
 }
