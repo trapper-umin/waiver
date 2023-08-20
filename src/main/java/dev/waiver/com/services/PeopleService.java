@@ -8,8 +8,8 @@ import dev.waiver.com.services.DB.PeopleDBService;
 import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotValidException;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
+import dev.waiver.com.util.validation.PersonAllFieldsValidation;
 import dev.waiver.com.util.validation.PersonUsernameUniqueValidation;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,17 +27,20 @@ public class PeopleService {
 
     private final PeopleDBService peopleDBService;
     private final Mapper mapper;
-    private final PersonUsernameUniqueValidation personUsernameUniqueValidation;
     private final ModelMapper modelMapper;
+    private final PersonUsernameUniqueValidation personUsernameUniqueValidation;
+    private final PersonAllFieldsValidation personAllFieldsValidation;
 
     public PeopleService(PeopleDBService peopleDBService,
                          Mapper mapper,
                          PersonUsernameUniqueValidation personUsernameUniqueValidation,
-                         ModelMapper modelMapper) {
+                         ModelMapper modelMapper,
+                         PersonAllFieldsValidation personAllFieldsValidation) {
         this.peopleDBService = peopleDBService;
         this.mapper = mapper;
         this.personUsernameUniqueValidation = personUsernameUniqueValidation;
         this.modelMapper = modelMapper;
+        this.personAllFieldsValidation = personAllFieldsValidation;
     }
 
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> get(int id){
@@ -101,7 +104,8 @@ public class PeopleService {
                                                                                      BindingResult bindingResult){
         Person person=peopleDBService.get(id);
         modelMapper.map(updates,person);
-        validationPatchMethod(person,bindingResult);
+        personAllFieldsValidation.validate(person,bindingResult);
+        validation(bindingResult);
 
         ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
                 HttpStatus.OK,
@@ -120,17 +124,5 @@ public class PeopleService {
             throw new NotValidException(errors);
         }
     }
-
-    private void validationPatchMethod(Person person, BindingResult bindingResult){
-        if (person.getUsername() == null || person.getUsername().isEmpty()) {
-            bindingResult.rejectValue("username", "error.username", "Username is required");
-        }
-        if (person.getPassword() == null || person.getPassword().isEmpty()) {
-            bindingResult.rejectValue("password", "error.password", "Password is required");
-        }
-        validation(bindingResult);
-    }
-
-    //TODO валидация уникальности
 
 }
