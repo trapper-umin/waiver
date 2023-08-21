@@ -38,6 +38,16 @@ public class ImplPeopleController implements IPeopleController {
     }
 
     @Override
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> getAll(String fieldName) {
+        return peopleService.getAll(fieldName);
+    }
+
+    @Override
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> getAll(int page, int size, String fieldName) {
+        return peopleService.getAll(fieldName,page,size);
+    }
+
+    @Override
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> create(
             PersonDTOReqst personDTOReqst, BindingResult bindingResult) {
         return peopleService.create(personDTOReqst,bindingResult);

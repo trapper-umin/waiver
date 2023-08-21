@@ -75,7 +75,27 @@ public class PeopleService {
 
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
-    
+
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(String fieldName){
+        ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
+                HttpStatus.OK,
+                LocalDateTime.now(),
+                iterateByArrayOfPeopleAndConvertToDTO(peopleDBService.getAll(fieldName))
+        );
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(String fieldName,int page,int size){
+        ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
+                HttpStatus.OK,
+                LocalDateTime.now(),
+                iterateByArrayOfPeopleAndConvertToDTO(peopleDBService.getAll(fieldName,page,size))
+        );
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
 
     public List<PersonDTOResp> iterateByArrayOfPeopleAndConvertToDTO(List<Person> people){
         List<PersonDTOResp> peopleDTO=new ArrayList<>();

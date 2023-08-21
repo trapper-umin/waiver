@@ -31,6 +31,18 @@ public interface IPeopleController {
             @Parameter(description = "number of page") @RequestParam("page")int page,
             @Parameter(description = "size of content") @RequestParam("size")int size);
 
+    @Operation(summary = "get user's array with sorting")
+    @GetMapping(params = {"field"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(
+            @Parameter(description = "field for sorting") @RequestParam("field")String fieldName);
+
+    @Operation(summary = "get user's array with pagination and sorting")
+    @GetMapping(params = {"field","page","size"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(
+            @Parameter(description = "number of page") @RequestParam("page")int page,
+            @Parameter(description = "size of content") @RequestParam("size")int size,
+            @Parameter(description = "field for sorting") @RequestParam("field")String fieldName);
+
     @Operation(summary = "create user")
     @PostMapping
     ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>create(
