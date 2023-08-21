@@ -62,6 +62,13 @@ public class PeopleDBService implements CommonCRUDService<Person> {
         return people;
     }
 
+    public List<Person>getAllWhoseUsernameStartingWith(String search){
+        List<Person>people=peopleRepository.findByUsernameStartingWith(search);
+        if(people.isEmpty())
+            throw new NotFoundException("there are no users whose username STARTING WITH "+search);
+        return people;
+    }
+
     @Override
     @Transactional
     public void create(Person entity) {

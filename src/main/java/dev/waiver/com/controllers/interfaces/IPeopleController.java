@@ -43,6 +43,11 @@ public interface IPeopleController {
             @Parameter(description = "size of content") @RequestParam("size")int size,
             @Parameter(description = "field for sorting") @RequestParam("field")String fieldName);
 
+    @Operation(summary = "get user's array with searching")
+    @GetMapping(params = {"search"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAllWhoseUsernameStaringWith(
+            @Parameter(description = "field for searching") @RequestParam("search")String search);
+
     @Operation(summary = "create user")
     @PostMapping
     ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>create(
