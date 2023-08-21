@@ -62,10 +62,10 @@ public class PeopleDBService implements CommonCRUDService<Person> {
     }
 
 
-    //TODO
     @Transactional
     public void updatePatchMethod(Person person){
 
+        peopleRepository.save(person);
 
     }
 

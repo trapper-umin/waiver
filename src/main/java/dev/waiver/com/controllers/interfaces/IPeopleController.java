@@ -1,5 +1,6 @@
 package dev.waiver.com.controllers.interfaces;
 
+import dev.waiver.com.dto.requests.PersonDTOForPatchReqst;
 import dev.waiver.com.dto.requests.PersonDTOReqst;
 import dev.waiver.com.dto.responses.PersonDTOResp;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
@@ -39,7 +40,7 @@ public interface IPeopleController {
     @PatchMapping("/{id}")
     ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePatchMethod(
             @Parameter(description = "user's ID") @PathVariable("id") int id,
-            @RequestBody Map<String, Object>updates, BindingResult bindingResult);
+            @RequestBody @Valid PersonDTOForPatchReqst personDTOForPatchReqst, BindingResult bindingResult);
 
     @Operation(summary = "delete user")
     @DeleteMapping("/{id}")

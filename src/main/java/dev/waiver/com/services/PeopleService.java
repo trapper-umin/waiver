@@ -1,5 +1,6 @@
 package dev.waiver.com.services;
 
+import dev.waiver.com.dto.requests.PersonDTOForPatchReqst;
 import dev.waiver.com.dto.requests.PersonDTOReqst;
 import dev.waiver.com.dto.responses.PersonDTOResp;
 import dev.waiver.com.dto.responses.errors.ValidationErrorResponse;
@@ -8,6 +9,7 @@ import dev.waiver.com.services.DB.PeopleDBService;
 import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotValidException;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
+import org.modelmapper.Conditions;
 import dev.waiver.com.util.validation.PersonAllFieldsValidation;
 import dev.waiver.com.util.validation.PersonUsernameUniqueValidation;
 import org.modelmapper.ModelMapper;
@@ -20,7 +22,6 @@ import org.springframework.validation.FieldError;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class PeopleService {
@@ -31,15 +32,17 @@ public class PeopleService {
     private final PersonUsernameUniqueValidation personUsernameUniqueValidation;
     private final PersonAllFieldsValidation personAllFieldsValidation;
 
+
     public PeopleService(PeopleDBService peopleDBService,
                          Mapper mapper,
                          PersonUsernameUniqueValidation personUsernameUniqueValidation,
                          ModelMapper modelMapper,
                          PersonAllFieldsValidation personAllFieldsValidation) {
+
         this.peopleDBService = peopleDBService;
         this.mapper = mapper;
-        this.personUsernameUniqueValidation = personUsernameUniqueValidation;
         this.modelMapper = modelMapper;
+        this.personUsernameUniqueValidation = personUsernameUniqueValidation;
         this.personAllFieldsValidation = personAllFieldsValidation;
     }
 
@@ -100,10 +103,12 @@ public class PeopleService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePatchMethod(int id, Map<String,Object>updates,
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePatchMethod(int id, PersonDTOForPatchReqst personDTOForPatchReqst,
                                                                                      BindingResult bindingResult){
         Person person=peopleDBService.get(id);
-        modelMapper.map(updates,person);
+
+        modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        modelMapper.map(personDTOForPatchReqst,person);
         personAllFieldsValidation.validate(person,bindingResult);
         validation(bindingResult);
         peopleDBService.updatePatchMethod(person);

@@ -1,6 +1,7 @@
 package dev.waiver.com.controllers.abstracts;
 
 import dev.waiver.com.controllers.interfaces.IPeopleController;
+import dev.waiver.com.dto.requests.PersonDTOForPatchReqst;
 import dev.waiver.com.dto.requests.PersonDTOReqst;
 import dev.waiver.com.dto.responses.PersonDTOResp;
 import dev.waiver.com.services.PeopleService;
@@ -45,8 +46,8 @@ public class ImplPeopleController implements IPeopleController {
 
     @Override
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> updatePatchMethod(
-            int id, Map<String,Object> updates, BindingResult bindingResult) {
-        return peopleService.updatePatchMethod(id,updates, bindingResult);
+            int id, PersonDTOForPatchReqst personDTOForPatchReqst, BindingResult bindingResult) {
+        return peopleService.updatePatchMethod(id,personDTOForPatchReqst, bindingResult);
     }
 
     @Override
