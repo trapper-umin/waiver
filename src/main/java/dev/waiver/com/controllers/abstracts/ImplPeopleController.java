@@ -33,6 +33,11 @@ public class ImplPeopleController implements IPeopleController {
     }
 
     @Override
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> getAll(int page, int size) {
+        return peopleService.getAll(page,size);
+    }
+
+    @Override
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> create(
             PersonDTOReqst personDTOReqst, BindingResult bindingResult) {
         return peopleService.create(personDTOReqst,bindingResult);

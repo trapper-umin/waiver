@@ -66,6 +66,17 @@ public class PeopleService {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(int page,int size){
+        ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
+                HttpStatus.OK,
+                LocalDateTime.now(),
+                iterateByArrayOfPeopleAndConvertToDTO(peopleDBService.getAll(page,size))
+        );
+
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+    
+
     public List<PersonDTOResp> iterateByArrayOfPeopleAndConvertToDTO(List<Person> people){
         List<PersonDTOResp> peopleDTO=new ArrayList<>();
         for(Person person : people)

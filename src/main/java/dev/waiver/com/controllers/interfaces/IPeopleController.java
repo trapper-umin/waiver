@@ -25,6 +25,12 @@ public interface IPeopleController {
     @GetMapping
     ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> getAll();
 
+    @Operation(summary = "get user's array with pagination")
+    @GetMapping(params = {"page","size"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(
+            @Parameter(description = "number of page") @RequestParam("page")int page,
+            @Parameter(description = "size of content") @RequestParam("size")int size);
+
     @Operation(summary = "create user")
     @PostMapping
     ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>create(

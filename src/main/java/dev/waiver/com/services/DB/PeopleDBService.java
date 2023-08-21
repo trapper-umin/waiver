@@ -8,6 +8,8 @@ import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotFoundException;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -20,12 +22,9 @@ import java.util.Map;
 public class PeopleDBService implements CommonCRUDService<Person> {
 
     private final PeopleRepository peopleRepository;
-    private final ModelMapper modelMapper;
 
-    public PeopleDBService(PeopleRepository peopleRepository,
-                           ModelMapper modelMapper) {
+    public PeopleDBService(PeopleRepository peopleRepository) {
         this.peopleRepository = peopleRepository;
-        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -39,6 +38,27 @@ public class PeopleDBService implements CommonCRUDService<Person> {
         List<Person> people=peopleRepository.findAll();
         if(people.isEmpty())
             throw new NotFoundException("database is empty");
+        return people;
+    }
+
+    public List<Person>getAll(int page,int size){
+        List<Person>people=peopleRepository.findAll(PageRequest.of(page,size)).getContent();
+        if(people.isEmpty())
+            throw new NotFoundException("there were no users on the PAGE "+page+" with the SIZE "+size);
+        return people;
+    }
+
+    public List<Person>getAll(String fieldName){
+        List<Person>people=peopleRepository.findAll(Sort.by(fieldName));
+        if(people.isEmpty())
+            throw new NotFoundException("database is empty");
+        return people;
+    }
+
+    public List<Person>getAll(String fieldName, int page,int size){
+        List<Person>people=peopleRepository.findAll(PageRequest.of(page,size,Sort.by(fieldName))).getContent();
+        if(people.isEmpty())
+            throw new NotFoundException("there were no users on the PAGE "+page+" with the SIZE "+size+ "and sorting by FIELD "+fieldName);
         return people;
     }
 
@@ -72,6 +92,4 @@ public class PeopleDBService implements CommonCRUDService<Person> {
         peopleRepository.findById(id).orElseThrow(()->new NotFoundException("user with ID "+id+" not found"));
         peopleRepository.deleteById(id);
     }
-
-
 }
