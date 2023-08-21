@@ -106,6 +106,7 @@ public class PeopleService {
         modelMapper.map(updates,person);
         personAllFieldsValidation.validate(person,bindingResult);
         validation(bindingResult);
+        peopleDBService.updatePatchMethod(person);
 
         ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
                 HttpStatus.OK,

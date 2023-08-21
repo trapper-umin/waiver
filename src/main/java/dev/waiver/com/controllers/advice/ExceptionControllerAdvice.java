@@ -18,11 +18,12 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(NotFoundException.class)
     private ResponseEntity<ResponseWithStatusAndDate<SmallErrorMessage>> handleException(NotFoundException e){
+        List<SmallErrorMessage> errorList = List.of(new SmallErrorMessage(e.getMessage()));
 
         ResponseWithStatusAndDate<SmallErrorMessage> response=new ResponseWithStatusAndDate<>(
                 HttpStatus.NOT_FOUND,
                 LocalDateTime.now(),
-                List.of(new SmallErrorMessage(e.getMessage()))
+                errorList
         );
 
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
