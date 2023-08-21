@@ -64,11 +64,9 @@ public class PeopleDBService implements CommonCRUDService<Person> {
 
     //TODO
     @Transactional
-    public Person updatePatchMethod(Person person){
+    public void updatePatchMethod(Person person){
 
 
-
-        return person;
     }
 
     @Override

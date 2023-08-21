@@ -16,6 +16,7 @@ public class PersonAllFieldsValidation implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"username","","username should be not blank");
+//        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"username","","username should be not blank");
+        errors.rejectValue("password","","username should be not blank");
     }
 }
