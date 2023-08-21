@@ -61,12 +61,9 @@ public class PeopleDBService implements CommonCRUDService<Person> {
          peopleRepository.save(entity);
     }
 
-
     @Transactional
     public void updatePatchMethod(Person person){
-
         peopleRepository.save(person);
-
     }
 
     @Override

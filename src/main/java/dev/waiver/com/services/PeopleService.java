@@ -9,8 +9,8 @@ import dev.waiver.com.services.DB.PeopleDBService;
 import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotValidException;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
-import org.modelmapper.Conditions;
 import dev.waiver.com.util.validation.PersonAllFieldsValidation;
+import org.modelmapper.Conditions;
 import dev.waiver.com.util.validation.PersonUsernameUniqueValidation;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -106,7 +106,6 @@ public class PeopleService {
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>updatePatchMethod(int id, PersonDTOForPatchReqst personDTOForPatchReqst,
                                                                                      BindingResult bindingResult){
         Person person=peopleDBService.get(id);
-
         modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
         modelMapper.map(personDTOForPatchReqst,person);
         personAllFieldsValidation.validate(person,bindingResult);
@@ -119,6 +118,11 @@ public class PeopleService {
                 List.of(mapper.map(person,PersonDTOResp.class))
         );
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    public HttpStatus delete(int id){
+        peopleDBService.delete(id);
+        return HttpStatus.OK;
     }
 
     private void validation(BindingResult bindingResult){

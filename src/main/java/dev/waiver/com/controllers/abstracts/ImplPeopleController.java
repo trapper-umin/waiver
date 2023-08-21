@@ -52,6 +52,6 @@ public class ImplPeopleController implements IPeopleController {
 
     @Override
     public HttpStatus delete(int id) {
-        return null;
+        return peopleService.delete(id);
     }
 }
