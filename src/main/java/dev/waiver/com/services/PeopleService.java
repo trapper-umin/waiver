@@ -10,6 +10,7 @@ import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotValidException;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
 import dev.waiver.com.util.validation.PersonAllFieldsValidation;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.Conditions;
 import dev.waiver.com.util.validation.PersonUsernameUniqueValidation;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class PeopleService {
 
     private final PeopleDBService peopleDBService;
@@ -47,10 +49,13 @@ public class PeopleService {
     }
 
     public ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> get(int id){
+        Person person=peopleDBService.get(id);
+        PersonDTOResp personDTOResp=convertToPersonDTOResp(person);
+        System.out.println();
         ResponseWithStatusAndDate<PersonDTOResp> response=new ResponseWithStatusAndDate<>(
                 HttpStatus.OK,
                 LocalDateTime.now(),
-                List.of(mapper.map(peopleDBService.get(id),PersonDTOResp.class))
+                List.of(personDTOResp)
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -174,6 +179,10 @@ public class PeopleService {
                 errors.add(new ValidationErrorResponse(error.getField(),error.getDefaultMessage()));
             throw new NotValidException(errors);
         }
+    }
+
+    private PersonDTOResp convertToPersonDTOResp(Person person){
+        return modelMapper.map(person, PersonDTOResp.class);
     }
 
 }

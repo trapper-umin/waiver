@@ -29,7 +29,8 @@ public class Details extends AbstractEntity {
     private String name;
 
     @Column(name="age")
-    @Size(min = 1,max = 125,message = "age size should be between 1 and 125")
+    @Min(value = 1,message = "minimal age value 1")
+    @Max(value = 125,message = "maximum age value 125")
     private int age;
 
     @Column(name = "email")
@@ -54,4 +55,28 @@ public class Details extends AbstractEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToOne()
+    @JoinColumn(name = "person_id")
+    private Person owner;
+
+    public Details(String name,
+                   Person owner,
+                   int age,
+                   String email,
+                   int points,
+                   int missedTasks,
+                   int completedTasks,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt) {
+        this.name = name;
+        this.owner=owner;
+        this.age = age;
+        this.email = email;
+        this.points = points;
+        this.missedTasks = missedTasks;
+        this.completedTasks = completedTasks;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }
