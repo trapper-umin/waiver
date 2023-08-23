@@ -25,6 +25,29 @@ public interface IPeopleController {
     @GetMapping
     ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>> getAll();
 
+    @Operation(summary = "get user's array with pagination")
+    @GetMapping(params = {"page","size"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(
+            @Parameter(description = "number of page") @RequestParam("page")int page,
+            @Parameter(description = "size of content") @RequestParam("size")int size);
+
+    @Operation(summary = "get user's array with sorting")
+    @GetMapping(params = {"field"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(
+            @Parameter(description = "field for sorting") @RequestParam("field")String fieldName);
+
+    @Operation(summary = "get user's array with pagination and sorting")
+    @GetMapping(params = {"field","page","size"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAll(
+            @Parameter(description = "number of page") @RequestParam("page")int page,
+            @Parameter(description = "size of content") @RequestParam("size")int size,
+            @Parameter(description = "field for sorting") @RequestParam("field")String fieldName);
+
+    @Operation(summary = "get user's array with searching")
+    @GetMapping(params = {"search"})
+    ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>getAllWhoseUsernameStaringWith(
+            @Parameter(description = "field for searching") @RequestParam("search")String search);
+
     @Operation(summary = "create user")
     @PostMapping
     ResponseEntity<ResponseWithStatusAndDate<PersonDTOResp>>create(

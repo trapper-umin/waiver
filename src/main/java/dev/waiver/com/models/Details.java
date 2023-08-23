@@ -29,8 +29,9 @@ public class Details extends AbstractEntity {
     private String name;
 
     @Column(name="age")
-    @Size(min = 1,max = 125,message = "age size should be between 1 and 125")
-    private int age;
+    @Min(value = 1,message = "minimal age value 1")
+    @Max(value = 125,message = "maximum age value 125")
+    private Integer age;
 
     @Column(name = "email")
     @Size(min = 3,max = 255, message = "email size should be between 3 and 255")
@@ -38,15 +39,12 @@ public class Details extends AbstractEntity {
     private String email;
 
     @Column(name = "points")
-    @NotNull(message = "points should be not null")
     private int points;
 
     @Column(name = "missed_tasks")
-    @NotNull(message = "missed tasks size should be not null")
     private int missedTasks;
 
     @Column(name = "completed_tasks")
-    @NotNull(message = "completed tasks size should be not null")
     private int completedTasks;
 
     @Column(name = "created_at")
@@ -54,4 +52,42 @@ public class Details extends AbstractEntity {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToOne()
+    @JoinColumn(name = "person_id")
+    private Person owner;
+
+    public Details(String name,
+                   Person owner,
+                   int age,
+                   String email,
+                   int points,
+                   int missedTasks,
+                   int completedTasks,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt) {
+        this.name = name;
+        this.owner=owner;
+        this.age = age;
+        this.email = email;
+        this.points = points;
+        this.missedTasks = missedTasks;
+        this.completedTasks = completedTasks;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Details(Person owner,
+                   int points,
+                   int missedTasks,
+                   int completedTasks,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt) {
+        this.owner = owner;
+        this.points = points;
+        this.missedTasks = missedTasks;
+        this.completedTasks = completedTasks;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }

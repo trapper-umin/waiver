@@ -2,6 +2,7 @@ package dev.waiver.com.controllers.advice;
 
 import dev.waiver.com.dto.responses.errors.SmallErrorMessage;
 import dev.waiver.com.dto.responses.errors.ValidationErrorResponse;
+import dev.waiver.com.util.exception.ForbiddenFieldException;
 import dev.waiver.com.util.exception.NotFoundException;
 import dev.waiver.com.util.exception.NotValidException;
 import dev.waiver.com.util.response.ResponseWithStatusAndDate;
@@ -38,5 +39,14 @@ public class ExceptionControllerAdvice {
         );
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ForbiddenFieldException.class)
+    private ResponseEntity<SmallErrorMessage>handleException(ForbiddenFieldException e){
+
+        SmallErrorMessage response=new SmallErrorMessage(
+                "the fields you are trying to change are forbidden: "+e.getForbiddenFields().toString()
+        );
+        return new ResponseEntity<>(response,HttpStatus.FORBIDDEN);
     }
 }

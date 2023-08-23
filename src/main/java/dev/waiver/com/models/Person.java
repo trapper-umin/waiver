@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.List;
+
 
 @Entity
 @Table(name = "person")
@@ -37,4 +39,7 @@ public class Person extends AbstractEntity {
     @Column(name = "role")
     @Enumerated(value = EnumType.STRING)
     private Role role;
+
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private Details details;
 }
