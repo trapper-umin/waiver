@@ -12,7 +12,7 @@ public interface CommonCRUDService<E extends AbstractEntity> {
 
     E create(E entity);
 
-    void update(int id, E entity);
+    E update(int id, E entity);
 
     void delete(int id);
 }

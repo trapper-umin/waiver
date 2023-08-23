@@ -18,6 +18,11 @@ public class DetailsDBService {
         this.detailsRepository=detailsRepository;
     }
 
+    @Transactional
+    public Details updateViaPatch(Details details){
+        return details;
+    }
+
     @Transactional(readOnly = false)
     public void save(Details details){
         detailsRepository.save(details);

@@ -39,15 +39,12 @@ public class Details extends AbstractEntity {
     private String email;
 
     @Column(name = "points")
-    @NotNull(message = "points should be not null")
     private int points;
 
     @Column(name = "missed_tasks")
-    @NotNull(message = "missed tasks size should be not null")
     private int missedTasks;
 
     @Column(name = "completed_tasks")
-    @NotNull(message = "completed tasks size should be not null")
     private int completedTasks;
 
     @Column(name = "created_at")

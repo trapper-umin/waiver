@@ -138,12 +138,12 @@ public class PeopleService {
         personUsernameUniqueValidation.validate(personDTOReqst,bindingResult);
         validation(bindingResult);
 
-        peopleDBService.update(id,mapper.map(personDTOReqst,Person.class));
+        Person person = peopleDBService.update(id,mapper.map(personDTOReqst,Person.class));
 
         ResponseWithStatusAndDate<PersonDTOResp>response=new ResponseWithStatusAndDate<>(
                 HttpStatus.OK,
                 LocalDateTime.now(),
-                List.of(mapper.map(personDTOReqst,PersonDTOResp.class))
+                List.of(mapper.map(person,PersonDTOResp.class))
         );
 
         return new ResponseEntity<>(response, HttpStatus.OK);

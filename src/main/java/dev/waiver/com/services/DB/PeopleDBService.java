@@ -91,14 +91,16 @@ public class PeopleDBService implements CommonCRUDService<Person> {
 
     @Override
     @Transactional
-    public void update(int id, Person entity) {
-         Person person=peopleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("user with ID "+id+" not found"));
+    public Person update(int id, Person entity) {
+         Person person=get(id);
 
          entity.setId(id);
          entity.setRole(person.getRole());
+         entity.setDetails(person.getDetails());
 
          peopleRepository.save(entity);
+
+         return person;
     }
 
     @Transactional
