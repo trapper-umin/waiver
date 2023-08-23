@@ -10,7 +10,7 @@ public interface CommonCRUDService<E extends AbstractEntity> {
 
     List<E> getAll();
 
-    void create(E entity);
+    E create(E entity);
 
     void update(int id, E entity);
 

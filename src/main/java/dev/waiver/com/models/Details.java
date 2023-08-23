@@ -31,7 +31,7 @@ public class Details extends AbstractEntity {
     @Column(name="age")
     @Min(value = 1,message = "minimal age value 1")
     @Max(value = 125,message = "maximum age value 125")
-    private int age;
+    private Integer age;
 
     @Column(name = "email")
     @Size(min = 3,max = 255, message = "email size should be between 3 and 255")
@@ -73,6 +73,20 @@ public class Details extends AbstractEntity {
         this.owner=owner;
         this.age = age;
         this.email = email;
+        this.points = points;
+        this.missedTasks = missedTasks;
+        this.completedTasks = completedTasks;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Details(Person owner,
+                   int points,
+                   int missedTasks,
+                   int completedTasks,
+                   LocalDateTime createdAt,
+                   LocalDateTime updatedAt) {
+        this.owner = owner;
         this.points = points;
         this.missedTasks = missedTasks;
         this.completedTasks = completedTasks;

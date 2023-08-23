@@ -1,30 +1,30 @@
 package dev.waiver.com.services.DB;
 
 import dev.waiver.com.common.Role;
+import dev.waiver.com.models.Details;
 import dev.waiver.com.models.Person;
+import dev.waiver.com.repositories.DetailsRepository;
 import dev.waiver.com.repositories.PeopleRepository;
 import dev.waiver.com.services.common.CommonCRUDService;
-import dev.waiver.com.services.mapper.Mapper;
 import dev.waiver.com.util.exception.NotFoundException;
-import jakarta.validation.Valid;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional(readOnly = true)
 public class PeopleDBService implements CommonCRUDService<Person> {
 
     private final PeopleRepository peopleRepository;
+    private final DetailsRepository detailsRepository;
 
-    public PeopleDBService(PeopleRepository peopleRepository) {
+    public PeopleDBService(PeopleRepository peopleRepository, DetailsRepository detailsRepository) {
         this.peopleRepository = peopleRepository;
+        this.detailsRepository = detailsRepository;
     }
 
     @Override
@@ -71,9 +71,22 @@ public class PeopleDBService implements CommonCRUDService<Person> {
 
     @Override
     @Transactional
-    public void create(Person entity) {
+    public Person create(Person entity) {
         entity.setRole(Role.USER);
+
+        Details details=new Details(
+                entity,
+                0,
+                0,
+                0,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        entity.setDetails(details);
+
+        detailsRepository.save(details);
         peopleRepository.save(entity);
+        return entity;
     }
 
     @Override
